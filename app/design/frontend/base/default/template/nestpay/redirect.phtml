@@ -1,0 +1,58 @@
+<?php
+$sendCustomerInfo = Mage::getStoreConfig('payment/nestpay/customer_info');
+$order = new Mage_Sales_Model_Order();
+$order->loadByIncrementId($oid);
+
+$billingAddress = Mage::getModel('sales/order_address')->load($order->getBillingAddressId());
+$shippingAddress = Mage::getModel('sales/order_address')->load($order->getShippingAddressId());
+?>
+<h2><?php echo $this->__('Nestpay Gateway') ?></h2>
+<p>Redirecting to Nestpay Payment Gateway...</p>
+<form name="nestpay" method="post"
+	  action="<?php echo Mage::getModel('nestpay/standard')->getFormUrl() ?>">
+
+	<input type="hidden" name="clientid" value="<?php echo $clientid; ?>"/>
+	<input type="hidden" name="storetype" value="3d_pay_hosting"/>
+	<input type="hidden" name="hash" value="<?php echo $hash; ?>"/>
+	<input type="hidden" name="trantype" value="<?php echo $trantype; ?>"/>
+	<input type="hidden" name="amount" value="<?php echo $ammount; ?>"/>
+	<input type="hidden" name="currency" value="<?php echo $currency; ?>"/>
+	<input type="hidden" name="oid" value="<?php echo $oid; ?>"/>
+	<input type="hidden" name="okUrl" value="<?php echo $okUrl; ?>"/>
+	<input type="hidden" name="failUrl" value="<?php echo $failUrl; ?>"/>
+	<input type="hidden" name="lang" value="<?php echo $lang; ?>"/>
+	<input type="hidden" name="rnd" value="<?php echo $rnd; ?>"/>
+	<input type="hidden" name="hashAlgorithm" value="Ver2"/>
+	<input type="hidden" name="encoding" value="<?php echo $encoding; ?>"/>
+
+	<?php
+	if ($sendCustomerInfo) {
+		?>
+		<input type="hidden" name="BillToCompany" value="<?php echo $billingAddress->getData('company') ?>">
+		<input type="hidden" name="BillToName"
+			   value="<?php echo $billingAddress->getData('firstname') . " " . $billingAddress->getData('lastname') ?>">
+		<input type="hidden" name="BillToStreet1" value="<?php echo $billingAddress->getStreet1() ?>">
+		<input type="hidden" name="BillToStreet2" value="<?php echo $billingAddress->getStreet2() ?>">
+		<input type="hidden" name="BillToCity" value="<?php echo $billingAddress->getData('city') ?>">
+		<input type="hidden" name="BillToStateProv" value="<?php echo $billingAddress->getData('region') ?>">
+		<input type="hidden" name="BillToPostalCode" value="<?php echo $billingAddress->getData('postcode') ?>">
+		<input type="hidden" name="BillToCountry" value="<?php echo $billingAddress->getData('country_id') ?>">
+		<input type="hidden" name="email" value="<?php echo $billingAddress->getData('email') ?>">
+		<input type="hidden" name="tel" value="<?php echo $billingAddress->getData('phone') ?>">
+
+		<input type="hidden" name="ShipToCompany" value="<?php echo $shippingAddress->getData('company') ?>">
+		<input type="hidden" name="ShipToName"
+			   value="<?php echo $shippingAddress->getData('firstname') . " " . $shippingAddress->getData('lastname') ?>">
+		<input type="hidden" name="ShipToStreet1" value="<?php echo $shippingAddress->getStreet1() ?>">
+		<input type="hidden" name="ShipToStreet2" value="<?php echo $shippingAddress->getStreet2() ?>">
+		<input type="hidden" name="ShipToCity" value="<?php echo $shippingAddress->getData('city') ?>">
+		<input type="hidden" name="ShipToStateProv" value="<?php echo $shippingAddress->getData('region') ?>">
+		<input type="hidden" name="ShipToPostalCode" value="<?php echo $shippingAddress->getData('postcode') ?>">
+		<input type="hidden" name="ShipToCountry" value="<?php echo $shippingAddress->getData('country_id') ?>">
+		<?php
+	}
+	?>
+</form>
+<script type="text/javascript">
+	document.nestpay.submit();
+</script>

@@ -1,0 +1,15 @@
+<h2><?php echo $this->__('Payment error'); ?></h2>
+<?php
+switch ($this->getRequest()->getParam('code')) {
+	case Spletnik_Nestpay_Model_Standard::MISSING_ORDER:
+		echo $this->__('Order for your payment could not be found, please try again.<br><br> If problem persist please contact administrator.');
+		break;
+	case Spletnik_Nestpay_Model_Standard::WRONG_HASH:
+		echo $this->__('There has been an error while processing your payment, please try again later.');
+		break;
+	default:
+		echo $this->__('There has been an error while processing your payment, please try again later.');
+		break;
+}
+
+?>
