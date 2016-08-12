@@ -43,6 +43,20 @@
                 </setup>
             </nestpay_setup>
         </resources>
+        <template>
+            <email>
+                <nestpay_payment_received>
+                    <label>Nestpay Payment Received</label>
+                    <file>nestpay_payment_received.html</file>
+                    <type>html</type>
+                </nestpay_payment_received>
+                <nestpay_payment_failed>
+                    <label>Nestpay Payment Failed</label>
+                    <file>nestpay_payment_failed.html</file>
+                    <type>html</type>
+                </nestpay_payment_failed>
+            </email>
+        </template>
     </global>
 
     <default>

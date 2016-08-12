@@ -1,0 +1,56 @@
+<div class="page-title">
+    <h1><?php echo $this->__('Your order has been received.') ?></h1>
+</div>
+<h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+<p><?php echo $this->__('Your order # is: %s.', $this->getData('orderID')) ?></p>
+<p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+<style>
+    table tr td {
+        padding: 5px 15px;
+    }
+
+    table tr th {
+        padding: 5px 10px;
+    }
+</style>
+<h2 class="sub-title"><?php echo $this->__('Payment information:'); ?></h2>
+<table border="1">
+
+    <tbody>
+    <tr>
+        <th><strong>Order ID</strong></th>
+        <td><?php echo $this->getData('orderID') ?></td>
+    </tr>
+    <tr>
+        <th><strong>Authorization code</strong></th>
+        <td><?php echo $this->getData('AuthCode') ?></td>
+    </tr>
+    <tr>
+        <th><strong>Unique Internet transaction ID</strong></th>
+        <td><?php echo $this->getData('xid') ?></td>
+    </tr>
+    <tr>
+        <th><strong>Response</strong></th>
+        <td><?php echo $this->getData('Response') ?></td>
+    </tr>
+    <tr>
+        <th><strong>Transaction status code</strong></th>
+        <td><?php echo $this->getData('ProcReturnCode') ?></td>
+    </tr>
+    <tr>
+        <th><strong>Unique transaction ID</strong></th>
+        <td><?php echo $this->getData('TransId') ?></td>
+    </tr>
+    <tr>
+        <th><strong>Transaction Date</strong></th>
+        <td><?php echo $this->getData('EXTRA_TRXDATE') ?></td>
+    </tr>
+    </tbody>
+</table>
+
+
+<div class="buttons-set">
+    <button type="button" class="button" title="<?php echo $this->__('Continue Shopping') ?>"
+            onclick="window.location='<?php echo $this->getUrl() ?>'">
+        <span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+</div>
