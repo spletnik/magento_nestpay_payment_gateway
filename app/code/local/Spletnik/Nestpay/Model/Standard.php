@@ -5,7 +5,7 @@ class Spletnik_Nestpay_Model_Standard extends Mage_Payment_Model_Method_Abstract
     const WRONG_HASH = 101;
 
     protected $liveUrl = 'https://testsecurepay.intesasanpaolocard.com/fim/est3dgate';
-    protected $testUrl = 'https://testsecurepay.intesasanpaolocard.com/fim/est3dgate';
+    protected $testUrl = 'https://bib.eway2pay.com/fim/est3Dgate';
 
     protected $_code = 'nestpay';
 

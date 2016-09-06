@@ -2,8 +2,8 @@
     <h1><?php echo $this->__('Your order has been received.') ?></h1>
 </div>
 <h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
-<p><?php echo $this->__('Your order # is: %s.', $this->getData('orderID')) ?></p>
-<p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+<p><?php echo $this->__('Your order # is: ') . $this->getData('orderID') ?></p>
+<p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track the progress.') ?></p>
 <style>
     table tr td {
         padding: 5px 15px;
@@ -18,35 +18,71 @@
 
     <tbody>
     <tr>
-        <th><strong>Order ID</strong></th>
+        <th><strong><?php echo $this->__('Order ID') ?></strong></th>
         <td><?php echo $this->getData('orderID') ?></td>
     </tr>
     <tr>
-        <th><strong>Authorization code</strong></th>
+        <th><strong><?php echo $this->__('Authorization code') ?></strong></th>
         <td><?php echo $this->getData('AuthCode') ?></td>
     </tr>
     <tr>
-        <th><strong>Unique Internet transaction ID</strong></th>
+        <th><strong><?php echo $this->__('Unique Internet transaction ID') ?></strong></th>
         <td><?php echo $this->getData('xid') ?></td>
     </tr>
     <tr>
-        <th><strong>Response</strong></th>
+        <th><strong><?php echo $this->__('Response') ?></strong></th>
         <td><?php echo $this->getData('Response') ?></td>
     </tr>
     <tr>
-        <th><strong>Transaction status code</strong></th>
+        <th><strong><?php echo $this->__('Transaction status code') ?></strong></th>
         <td><?php echo $this->getData('ProcReturnCode') ?></td>
     </tr>
     <tr>
-        <th><strong>Unique transaction ID</strong></th>
+        <th><strong><?php echo $this->__('Unique transaction ID') ?></strong></th>
         <td><?php echo $this->getData('TransId') ?></td>
     </tr>
     <tr>
-        <th><strong>Transaction Date</strong></th>
+        <th><strong><?php echo $this->__('Transaction Date') ?></strong></th>
         <td><?php echo $this->getData('EXTRA_TRXDATE') ?></td>
     </tr>
     </tbody>
 </table>
+<?php
+if ($this->getData('orderID') > 0) {
+    $order = Mage::getModel('sales/order')->loadByIncrementId($this->getData('orderID'));
+    $billing_info = $order->getBillingAddress();
+    ?>
+    <h2 class="sub-title"><?php echo $this->__('Billing information'); ?>:</h2>
+    <table border="1">
+
+        <tbody>
+        <tr>
+            <th><strong><?php echo $this->__('Name and Surname') ?></strong></th>
+            <td><?php echo $billing_info->getName() ?></td>
+        </tr>
+        <tr>
+            <th><strong><?php echo $this->__('Address') ?></strong></th>
+            <td>
+                <?php echo $billing_info->getStreetFull() ?><br>
+            </td>
+        </tr>
+        <tr>
+            <th><strong><?php echo $this->__('Post code') ?></strong></th>
+            <td><?php echo $billing_info->getPostcode() ?></td>
+        </tr>
+        <tr>
+            <th><strong><?php echo $this->__('City') ?></strong></th>
+            <td><?php echo $billing_info->getCity() ?></td>
+        </tr>
+        <tr>
+            <th><strong><?php echo $this->__('Country') ?></strong></th>
+            <td><?php echo $billing_info->getCountryModel()->getName() ?></td>
+        </tr>
+        </tbody>
+    </table>
+    <?php
+}
+?>
 
 
 <div class="buttons-set">

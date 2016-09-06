@@ -149,7 +149,7 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
             $processedTemplate = mb_convert_encoding($emailTemplate->getProcessedTemplate($data), 'ISO-8859-1', 'UTF-8');
 
 
-            $mail = Mage::getModel('core/email')
+            /*$mail = Mage::getModel('core/email')
                 ->setToName($order->getBillingAddress()->getName())
                 ->setToEmail($order->getBillingAddress()->getEmail())
                 ->setBody($processedTemplate)
@@ -157,6 +157,14 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
                 ->setFromEmail(Mage::getStoreConfig('trans_email/ident_sales/email'))
                 ->setFromName(Mage::getStoreConfig('trans_email/ident_sales/name'))
                 ->setType('html');
+            $mail->send();*/
+
+            $mail = new Zend_Mail('utf-8');
+            $mail->setBodyHtml($processedTemplate);
+
+            $mail->setFrom(Mage::getStoreConfig('trans_email/ident_sales/email'), Mage::getStoreConfig('trans_email/ident_sales/name'))
+                ->addTo($order->getBillingAddress()->getEmail(), $order->getBillingAddress()->getName())
+                ->setSubject($this->__('Payment successful #') . $orderId);
             $mail->send();
 
             //Mage_Core_Controller_Varien_Action::_redirect('nestpay/payment/success', array('_secure' => true));
@@ -196,9 +204,11 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
             $payment = $order->getPayment();
             $payment->setTransactionId($transactionID);
             $transaction = $payment->addTransaction('void', null, false, $comment);
-            $transaction->setParentTxnId($transactionID);
-            $transaction->setIsClosed(true);
-            $transaction->save();
+            if ($transaction != null) {
+                $transaction->setParentTxnId($transactionID);
+                $transaction->setIsClosed(true);
+                $transaction->save();
+            }
             $order->save();
 
             /**
@@ -208,9 +218,6 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
             $quote->setIsActive(true)->setReservedOrderId(NULL)->save();
             $session->replaceQuote($quote);
 
-            /**
-             * Send email
-             */
 
             /**
              * Send email
@@ -228,24 +235,27 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
 
             $emailTemplate = Mage::getModel('core/email_template')->loadDefault('nestpay_payment_failed');
             //$processedTemplate = utf8_decode($emailTemplate->getProcessedTemplate($data));
-            $processedTemplate = mb_convert_encoding($emailTemplate->getProcessedTemplate($data), 'ISO-8859-1', 'UTF-8');
+            $processedTemplate = $emailTemplate->getProcessedTemplate($data);
 
+            /**
+             * Send email
+             */
 
-            $mail = Mage::getModel('core/email')
-                ->setToName($order->getBillingAddress()->getName())
-                ->setToEmail($order->getBillingAddress()->getEmail())
-                ->setBody($processedTemplate)
-                ->setSubject('Payment failed  #' . $orderId)
-                ->setFromEmail(Mage::getStoreConfig('trans_email/ident_sales/email'))
-                ->setFromName(Mage::getStoreConfig('trans_email/ident_sales/name'))
-                ->setType('html');
+            $mail = new Zend_Mail('uft-8');
+            //$mail->setHeaderEncoding(Zend_Mime::ENCODING_BASE64);
+            $mail->setBodyHtml($processedTemplate);
+
+            $mail->setFrom(Mage::getStoreConfig('trans_email/ident_sales/email'), Mage::getStoreConfig('trans_email/ident_sales/name'))
+                ->addTo($order->getBillingAddress()->getEmail(), $order->getBillingAddress()->getName())
+                ->setSubject($this->__('Payment failed #') . $orderId);
+
             $mail->send();
+
 
             /**
              * Redirect to error page
              */
             $this->_forward('error', NULL, NULL, $data);
-            //Mage_Core_Controller_Varien_Action::_redirect('nestpay/payment/error', array('_secure' => true));
         }
     }
 
@@ -262,24 +272,29 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
     }
 
     public function errorAction() {
+        $orderID = $this->getRequest()->getParam('orderID');
+        $AuthCode = $this->getRequest()->getParam('AuthCode');
+        $xid = $this->getRequest()->getParam('xid');
+        $Response = $this->getRequest()->getParam('Response');
+        $ProcReturnCode = $this->getRequest()->getParam('ProcReturnCode');;
+        $TransId = $this->getRequest()->getParam('TransId');
+        $EXTRA_TRXDATE = $this->getRequest()->getParam('EXTRA_TRXDATE');
+
         $this->loadLayout();
-        $block = $this->getLayout()->createBlock('Mage_Core_Block_Template', 'nestpay', array('template' => 'nestpay/error.phtml'));
+        $block = $this->getLayout()
+            ->createBlock('Mage_Core_Block_Template', 'nestpay', array('template' => 'nestpay/error.phtml'))
+            ->setData('orderID', $orderID)
+            ->setData('AuthCode', $AuthCode)
+            ->setData('xid', $xid)
+            ->setData('Response', $Response)
+            ->setData('ProcReturnCode', $ProcReturnCode)
+            ->setData('TransId', $TransId)
+            ->setData('EXTRA_TRXDATE', $EXTRA_TRXDATE);
         $this->getLayout()->getBlock('content')->append($block);
         $this->renderLayout();
     }
 
     public function successAction() {
-
-        //$emailTemplate->send('branko.suligoj@shark4109.com', 'John Doe', $emailTemplateVariables);
-
-        //Sending E-Mail to Customers.
-        //echo($processedTemplate);
-        //die('Finished');
-        /*} catch (Exception $error) {
-            Mage::getSingleton('core/session')->addError($error->getMessage());
-            return false;
-        }*/
-
         $orderID = $this->getRequest()->getParam('orderID');
         $AuthCode = $this->getRequest()->getParam('AuthCode');
         $xid = $this->getRequest()->getParam('xid');
