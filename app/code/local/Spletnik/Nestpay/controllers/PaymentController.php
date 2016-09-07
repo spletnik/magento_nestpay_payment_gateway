@@ -76,12 +76,13 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
     }
 
     public function responseAction() {
-        if (!$this->checkHash($this->getRequest()->get('HASHPARAMSVAL'), $this->getRequest()->get('HASH'))) {
+        file_put_contents("payment.log", print_r($_REQUEST, true), FILE_APPEND);
+
+        /*if (!$this->checkHash($this->getRequest()->get('HASHPARAMSVAL'), $this->getRequest()->get('HASH'))) {
             Mage_Core_Controller_Varien_Action::_redirect('nestpay/payment/error', array('_secure' => true, 'code' => Spletnik_Nestpay_Model_Standard::WRONG_HASH));
 
             return;
-        }
-        file_put_contents("payment.log", print_r($_REQUEST, true), FILE_APPEND);
+        }*/
         if ($this->getRequest()->get("Response") == "Approved" && $this->getRequest()->get("ReturnOid")) {
             /**
              * Order succeeded
@@ -259,18 +260,6 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
         }
     }
 
-    private function checkHash($plaintext, $hash) {
-        $storekey = str_replace("|", "\\|", str_replace("\\", "\\\\", Mage::getStoreConfig('payment/nestpay/storekey')));
-
-        $calculatedHash = base64_encode(pack('H*', hash('sha512', $plaintext . '|' . $storekey)));
-
-        if ($hash != $calculatedHash) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function errorAction() {
         $orderID = $this->getRequest()->getParam('orderID');
         $AuthCode = $this->getRequest()->getParam('AuthCode');
@@ -316,5 +305,17 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
 
         $this->getLayout()->getBlock('content')->append($block);
         $this->renderLayout();
+    }
+
+    private function checkHash($plaintext, $hash) {
+        $storekey = str_replace("|", "\\|", str_replace("\\", "\\\\", Mage::getStoreConfig('payment/nestpay/storekey')));
+
+        $calculatedHash = base64_encode(pack('H*', hash('sha512', $plaintext . '|' . $storekey)));
+
+        if ($hash != $calculatedHash) {
+            return false;
+        }
+
+        return true;
     }
 }
