@@ -7,7 +7,7 @@ $billingAddress = Mage::getModel('sales/order_address')->load($order->getBilling
 $shippingAddress = Mage::getModel('sales/order_address')->load($order->getShippingAddressId());
 ?>
 <h2><?php echo $this->__('Nestpay Gateway') ?></h2>
-<p>Redirecting to Nestpay Payment Gateway...</p>
+<p><?php echo $this->__('Redirecting to Nestpay Payment Gateway...') ?></p>
 <form name="nestpay" method="post"
 	  action="<?php echo Mage::getModel('nestpay/standard')->getFormUrl() ?>">
 
