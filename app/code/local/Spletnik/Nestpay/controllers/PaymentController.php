@@ -76,7 +76,8 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
     }
 
     public function responseAction() {
-        file_put_contents("payment.log", print_r($_REQUEST, true), FILE_APPEND);
+        $currentDateTime = Mage::getModel('core/date')->date('d-m-Y H:i:s') . " ";
+        file_put_contents(Mage::getBaseDir("log") . "/payment.log", $currentDateTime . print_r($_REQUEST, true), FILE_APPEND);
 
         /*if (!$this->checkHash($this->getRequest()->get('HASHPARAMSVAL'), $this->getRequest()->get('HASH'))) {
             Mage_Core_Controller_Varien_Action::_redirect('nestpay/payment/error', array('_secure' => true, 'code' => Spletnik_Nestpay_Model_Standard::WRONG_HASH));
