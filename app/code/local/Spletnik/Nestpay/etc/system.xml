@@ -8,7 +8,7 @@
                     <sort_order>1000</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
-                    <show_in_store>0</show_in_store>
+                    <show_in_store>1</show_in_store>
                     <fields>
                         <title translate="label">
                             <label>Title</label>
@@ -111,6 +111,14 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>15</sort_order>
                         </specificcountry>
+                        <infotext transalte="label">
+                            <label>Customer Info Text</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </infotext>
                     </fields>
                 </nestpay>
             </groups>
