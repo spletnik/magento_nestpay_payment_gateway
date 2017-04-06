@@ -54,7 +54,7 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
             'storetype' => $storetype,
             'hash'      => $hash,
             'trantype'  => $trantype,
-            'ammount'   => $amount,
+            'ammount'   => round($amount,2),
             'currency'  => $currency,
             'oid'       => $oid,
             'okUrl'     => $okurl,
