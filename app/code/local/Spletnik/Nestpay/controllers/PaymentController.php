@@ -29,6 +29,7 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
         $clientid = str_replace("|", "\\|", str_replace("\\", "\\\\", Mage::getStoreConfig('payment/nestpay/clientid')));
         $oid = str_replace("|", "\\|", str_replace("\\", "\\\\", $order->getIncrementId()));
         $amount = str_replace("|", "\\|", str_replace("\\", "\\\\", $order->getGrandTotal()));
+        $amount = round($amount,2);
         $okurl = str_replace("|", "\\|", str_replace("\\", "\\\\", Mage::getUrl('nestpay/payment/response', array('_secure' => true))));
         $failurl = str_replace("|", "\\|", str_replace("\\", "\\\\", Mage::getUrl('nestpay/payment/response', array('_secure' => true))));
         $trantype = str_replace("|", "\\|", str_replace("\\", "\\\\", Mage::getStoreConfig('payment/nestpay/trantype')));
@@ -54,7 +55,7 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
             'storetype' => $storetype,
             'hash'      => $hash,
             'trantype'  => $trantype,
-            'ammount'   => round($amount,2),
+            'ammount'   => $amount,
             'currency'  => $currency,
             'oid'       => $oid,
             'okUrl'     => $okurl,
