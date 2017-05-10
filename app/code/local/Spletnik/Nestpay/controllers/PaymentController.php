@@ -130,7 +130,7 @@ class Spletnik_Nestpay_PaymentController extends Mage_Core_Controller_Front_Acti
              * Change state
              */
 
-            $order->setState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, true, 'Payment Success.');
+            $order->setState(Mage_Sales_Model_Order::STATE_NEW, true, 'Payment Success.');
             $order->save();
 
             /**
